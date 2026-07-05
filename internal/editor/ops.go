@@ -2,7 +2,6 @@ package editor
 
 import "strings"
 
-// applyLinewise deletes/yanks/changes whole lines [row1,row2] (inclusive).
 func (b *Buffer) applyLinewise(op byte, reg rune, row1, row2 int) {
 	if row1 > row2 {
 		row1, row2 = row2, row1
@@ -37,7 +36,6 @@ func (b *Buffer) applyLinewise(op byte, reg rune, row1, row2 int) {
 			}
 			b.Cursor.Col = b.lineFirstNonBlank(b.Cursor.Row)
 		} else {
-			// 'c'c: leave a blank line to type into.
 			newLines := append([]string(nil), b.Lines[:row1]...)
 			newLines = append(newLines, "")
 			newLines = append(newLines, b.Lines[row1:]...)
@@ -49,8 +47,6 @@ func (b *Buffer) applyLinewise(op byte, reg rune, row1, row2 int) {
 	}
 }
 
-// applyCharwise deletes/yanks/changes the span from..to on possibly
-// multiple lines. `inclusive` means the character at `to` is included.
 func (b *Buffer) applyCharwise(op byte, reg rune, from, to Pos, inclusive bool) {
 	if to.Row < from.Row || (to.Row == from.Row && to.Col < from.Col) {
 		from, to = to, from

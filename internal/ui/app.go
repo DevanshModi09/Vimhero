@@ -1,5 +1,3 @@
-// Package ui implements the VimHero Bubble Tea application: a day/
-// challenge menu and a play screen that wraps the editor engine.
 package ui
 
 import (
@@ -30,7 +28,7 @@ type Model struct {
 	dayCursor       int
 	challengeCursor int
 
-	dayIdx       int // index into m.days of the day being played/browsed
+	dayIdx       int
 	challengeIdx int
 
 	buf       *editor.Buffer

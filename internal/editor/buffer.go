@@ -1,7 +1,3 @@
-// Package editor implements a small but real modal text editor with
-// Vim-compatible keybindings. It is the engine that every VimHero
-// challenge runs on: navigation puzzles and text-transform puzzles are
-// both just "reach a state" checks against this Buffer.
 package editor
 
 import "strings"
@@ -13,7 +9,7 @@ const (
 	ModeInsert
 	ModeVisual
 	ModeVisualLine
-	ModeCommand // ':' or '/' prompt at the bottom
+	ModeCommand
 )
 
 type Pos struct {
@@ -21,27 +17,24 @@ type Pos struct {
 }
 
 type pendingFind struct {
-	kind byte // 'f','t','F','T'
+	kind byte
 	char rune
 }
 
-// Buffer is the whole editor state machine. One Buffer == one challenge
-// attempt. Callers feed it raw key tokens via Input and read back Lines/
-// Cursor/Mode to render and to check win conditions.
 type Buffer struct {
 	Lines  []string
 	Cursor Pos
 	Mode   Mode
 
-	desiredCol int // "sticky" column for j/k over short lines
+	desiredCol int
 
-	count       string // accumulating digit-prefix, e.g. "3" before "3w"
-	pendingOp   byte   // 'd','c','y' waiting on a motion
-	pendingG    bool   // saw 'g', waiting on second key (gg)
-	pendingKind byte   // 0, or one of 'f','t','F','T','r','m','\'','q','@','i','a' awaiting an argument char
-	awaitAround bool   // for pendingKind 'i'/'a': true means "a" (around), false means "i" (inner)
+	count       string
+	pendingOp   byte
+	pendingG    bool
+	pendingKind byte
+	awaitAround bool
 
-	pendingOpCount int // count captured before the operator key, multiplied with the motion's count
+	pendingOpCount int
 
 	visualStart Pos
 
@@ -49,15 +42,15 @@ type Buffer struct {
 	marks         map[rune]Pos
 	lastFind      pendingFind
 	searchPattern string
-	searchDir     int // +1 forward, -1 backward
+	searchDir     int
 	recordingReg  rune
 	macroBuf      strings.Builder
 	macros        map[rune]string
 	replayDepth   int
 	lastMacroReg  rune
 
-	CommandLine string // text typed after ':' or '/'
-	commandKind byte   // ':' or '/'
+	CommandLine string
+	commandKind byte
 	StatusMsg   string
 
 	undoStack []snapshot
@@ -107,8 +100,6 @@ func (b *Buffer) lineLen(row int) int {
 	return len([]rune(b.line(row)))
 }
 
-// clampCol clamps col into [0, len] where len allows one-past-the-end
-// only in insert/visual contexts; normal mode clamps to len-1 (or 0).
 func clampCol(col, max int) int {
 	if max < 0 {
 		max = 0

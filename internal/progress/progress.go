@@ -1,6 +1,3 @@
-// Package progress persists a player's advancement through VimHero:
-// which day is unlocked, best keystroke count per challenge, and the
-// daily play streak.
 package progress
 
 import (
@@ -18,9 +15,9 @@ type ChallengeResult struct {
 
 type State struct {
 	UnlockedDay int                        `json:"unlocked_day"`
-	Results     map[string]ChallengeResult `json:"results"` // key: "day-challengeIndex"
+	Results     map[string]ChallengeResult `json:"results"`
 	Streak      int                        `json:"streak"`
-	LastPlayed  string                     `json:"last_played"` // YYYY-MM-DD
+	LastPlayed  string                     `json:"last_played"`
 }
 
 func defaultState() *State {
@@ -102,8 +99,6 @@ func itoa(n int) string {
 	return string(buf[i:])
 }
 
-// RecordClear stores a challenge clear if it improves on any prior best,
-// and unlocks the next day when every challenge for `day` is cleared.
 func (s *State) RecordClear(day, challenge, keystrokes, stars, totalChallengesInDay int) {
 	k := key(day, challenge)
 	prev, ok := s.Results[k]

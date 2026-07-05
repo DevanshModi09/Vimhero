@@ -1,11 +1,9 @@
 package editor
 
-// motionResult describes where a motion lands and how an operator should
-// treat the span between the start position and here.
 type motionResult struct {
 	pos       Pos
-	inclusive bool // true for e, f, t, %, $ (character is included)
-	linewise  bool // true for gg, G, j, k, dd/yy-style
+	inclusive bool
+	linewise  bool
 	valid     bool
 }
 
@@ -61,8 +59,6 @@ func (b *Buffer) lineFirstNonBlank(row int) int {
 	return 0
 }
 
-// wordForward implements 'w'/'W'. bigWord=true means WORD (whitespace-
-// delimited only, ignoring punctuation classes).
 func (b *Buffer) wordForward(count int, bigWord bool) Pos {
 	row, col := b.Cursor.Row, b.Cursor.Col
 	for n := 0; n < count; n++ {
@@ -206,7 +202,6 @@ done:
 	return Pos{row, col}
 }
 
-// findChar implements f/t/F/T. Returns ok=false if char not found.
 func (b *Buffer) findChar(kind byte, ch rune, count int) (Pos, bool) {
 	line := []rune(b.line(b.Cursor.Row))
 	col := b.Cursor.Col
@@ -286,7 +281,6 @@ var bracketOpen = map[rune]rune{
 	')': '(', ']': '[', '}': '{',
 }
 
-// matchPercent implements '%': jump to the matching bracket on the current line/buffer.
 func (b *Buffer) matchPercent() (Pos, bool) {
 	row, col := b.Cursor.Row, b.Cursor.Col
 	line := []rune(b.line(row))
@@ -347,8 +341,6 @@ func (b *Buffer) scanMatch(row, col int, open, close rune, dir int) (Pos, bool) 
 	}
 }
 
-// textObjectRange resolves things like iw, aw, i(, a(, i", a' into a
-// [from,to) rune range on a single line, plus whether it's found.
 func (b *Buffer) textObjectRange(around bool, kind rune) (from, to int, ok bool) {
 	row := b.Cursor.Row
 	line := []rune(b.line(row))

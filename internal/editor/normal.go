@@ -35,7 +35,6 @@ func isDigit(key string) bool {
 }
 
 func (b *Buffer) handleNormal(key string) {
-	// Argument-awaiting states take priority over everything else.
 	if b.pendingKind != 0 {
 		b.handleAwaitedArg(key)
 		return
@@ -56,13 +55,11 @@ func (b *Buffer) handleNormal(key string) {
 		return
 	}
 
-	// Digit count accumulation ("0" only counts if a count is already started).
 	if isDigit(key) && !(key == "0" && b.count == "") {
 		b.count += key
 		return
 	}
 
-	// A register-recording toggle: 'q' while already recording stops it.
 	if key == "q" && b.recordingReg != 0 {
 		b.stopRecording()
 		b.resetPending()
@@ -75,7 +72,6 @@ func (b *Buffer) handleNormal(key string) {
 		return
 	}
 
-	// Operators: set pending and wait for a motion/text-object.
 	if b.pendingOp == 0 {
 		switch key {
 		case "d", "c", "y":
@@ -85,7 +81,6 @@ func (b *Buffer) handleNormal(key string) {
 			return
 		}
 	} else {
-		// Operator already pending: doubled key => linewise on count lines.
 		if key == string(b.pendingOp) {
 			n := b.totalCount()
 			op := b.pendingOp
@@ -125,9 +120,17 @@ func (b *Buffer) handleNormal(key string) {
 		b.Cursor = b.moveUp(n)
 		b.resetPending()
 	case "w":
-		b.gotoMotion(b.wordForward(b.totalCount(), false), false)
+		if b.pendingOp == 'c' && wordClass(runeAt(b.line(b.Cursor.Row), b.Cursor.Col)) != 0 {
+			b.gotoMotion(b.wordEnd(b.totalCount(), false), true)
+		} else {
+			b.gotoMotion(b.wordForward(b.totalCount(), false), false)
+		}
 	case "W":
-		b.gotoMotion(b.wordForward(b.totalCount(), true), false)
+		if b.pendingOp == 'c' && wordClass(runeAt(b.line(b.Cursor.Row), b.Cursor.Col)) != 0 {
+			b.gotoMotion(b.wordEnd(b.totalCount(), true), true)
+		} else {
+			b.gotoMotion(b.wordForward(b.totalCount(), true), false)
+		}
 	case "b":
 		b.gotoMotion(b.wordBackward(b.totalCount(), false), false)
 	case "B":
@@ -172,8 +175,6 @@ func (b *Buffer) handleNormal(key string) {
 	}
 
 	if b.pendingOp != 0 {
-		// Motion above didn't match (e.g. an unhandled key while an
-		// operator is pending) — bail out of the pending operator.
 		switch key {
 		case "h", "left", "l", "right", "w", "W", "b", "B", "e", "E", "0", "^", "$", "G", "%", "f", "t", "F", "T", ";", ",":
 		default:
@@ -342,8 +343,6 @@ func toggleCase(r rune) rune {
 	return r
 }
 
-// gotoMotion is called for plain cursor motions. If an operator is
-// pending, it applies the operator across [cursor,target) instead of moving.
 func (b *Buffer) gotoMotion(target Pos, inclusive bool) {
 	if b.pendingOp == 0 {
 		b.Cursor = target
@@ -382,8 +381,6 @@ func (b *Buffer) repeatFind(dir int) {
 	}
 }
 
-// handleAwaitedArg processes the single-key argument for f/t/F/T, r, m,
-// '/`, i/a text objects, q (start recording) and @ (replay macro).
 func (b *Buffer) handleAwaitedArg(key string) {
 	kind := b.pendingKind
 	r := []rune(key)

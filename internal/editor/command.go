@@ -76,8 +76,6 @@ func (b *Buffer) executeExCommand(line string) {
 	b.StatusMsg = "unknown command: :" + line
 }
 
-// execSubstitute parses "/pattern/replacement/flags" (the leading 's' was
-// already stripped by the caller).
 func (b *Buffer) execSubstitute(rest string, all bool) {
 	if len(rest) == 0 || rest[0] != '/' {
 		b.StatusMsg = "invalid :s syntax, use /pattern/replacement/"
@@ -133,7 +131,6 @@ func (b *Buffer) execSubstitute(rest string, all bool) {
 }
 
 func (b *Buffer) execGlobal(rest string) {
-	// Minimal :g/pattern/d support (delete every matching line).
 	parts := splitUnescaped(strings.TrimPrefix(rest, "/"), '/')
 	if len(parts) < 1 {
 		return
@@ -186,9 +183,6 @@ func splitUnescaped(s string, sep byte) []string {
 	return parts
 }
 
-// repeatSearch jumps to the next (dir>0) or previous (dir<0) match of the
-// last search pattern, relative to the direction the search was originally
-// made in ('/' vs '?'), wrapping around the buffer.
 func (b *Buffer) repeatSearch(dir int) {
 	if b.searchPattern == "" {
 		return

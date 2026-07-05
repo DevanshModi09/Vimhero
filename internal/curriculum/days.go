@@ -1,7 +1,4 @@
 package curriculum
-
-// days holds the full curriculum. Only Days 1-5 (Week 1: Basic Movement
-// & Modes) are authored so far — Days 6-45 are added incrementally.
 var days = []Day{
 	{
 		Number: 1,
@@ -264,6 +261,64 @@ var days = []Day{
 				Kind:        KindEdit,
 				Target:      []string{"one", "two", "two"},
 				Par:         3,
+			},
+		},
+	},
+	{
+		Number: 6,
+		Week:   "Week 2: More Operators",
+		Title:  "dw, cw, ciw — Operators Meet Word Motions",
+		Summary: "Operators (d, c, y) and motions (w) combine freely — you're not limited " +
+			"to the dd/yy pairs from Day 5. dw deletes a word forward. cw changes one, but " +
+			"has a real Vim quirk: it stops at the end of the current word instead of also " +
+			"eating the space after it. ciw sidesteps that entirely by targeting the whole " +
+			"word around the cursor, wherever inside it you happen to be.",
+		Challenges: []Challenge{
+			{
+				Title: "Delete The Extra Word",
+				Instructions: "You already know d deletes and w moves by word — combine them and " +
+					"dw deletes from the cursor to the start of the next word in a single motion. " +
+					"Delete the word \"very\" (and the space after it) from the line below.",
+				Tip: "Tip: like dd, this combo takes a count too — d3w deletes three words " +
+					"forward in one shot.",
+				NewKeys:     []string{"dw"},
+				Start:       []string{"quick very fast car"},
+				CursorStart: Pos{0, 6},
+				Kind:        KindEdit,
+				Target:      []string{"quick fast car"},
+				Par:         2,
+			},
+			{
+				Title: "The cw Quirk",
+				Instructions: "c changes text just like d deletes it, but cw has a special " +
+					"exception: if the cursor sits on a letter (not a space), it only replaces up " +
+					"to the end of that word — it leaves the trailing space alone, unlike dw. Fix " +
+					"the typo \"quikc\" into \"quick\" using cw.",
+				Tip: "Tip: this exception exists so cw feels natural for fixing typos — without " +
+					"it, retyping a word would also eat the space after it, forcing you to add it " +
+					"back yourself.",
+				NewKeys:     []string{"cw"},
+				Start:       []string{"quikc dog"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"quick dog"},
+				Par:         8,
+			},
+			{
+				Title: "Change Inner Word",
+				Instructions: "ciw changes the whole word your cursor is inside, no matter which " +
+					"letter you're on — unlike cw, you don't need to be sitting on the word's " +
+					"first letter. Use ciw to fix \"woord\" into \"word\" even though the cursor " +
+					"starts in the middle of it.",
+				Tip: "Tip: iw also works with d and y (diw, yiw) — because it grabs just the " +
+					"word itself, it's more predictable than w-based motions when the cursor " +
+					"isn't sitting on a word's edge.",
+				NewKeys:     []string{"ciw"},
+				Start:       []string{"fix the woord please"},
+				CursorStart: Pos{0, 10},
+				Kind:        KindEdit,
+				Target:      []string{"fix the word please"},
+				Par:         8,
 			},
 		},
 	},

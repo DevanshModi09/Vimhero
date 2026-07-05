@@ -2,10 +2,6 @@ package ui
 
 import "testing"
 
-// TestCurriculumSolvable scripts the intended solution for every
-// authored challenge and verifies it actually reaches the win condition
-// against the real editor engine. This catches off-by-one errors in
-// GoalPos/Target/CursorStart before a player ever hits them.
 func TestCurriculumSolvable(t *testing.T) {
 	cases := []struct {
 		day, challenge int
@@ -29,6 +25,10 @@ func TestCurriculumSolvable(t *testing.T) {
 		{5, 0, []string{"d", "d"}},
 		{5, 1, []string{"y", "y", "p"}},
 		{5, 2, []string{"y", "y", "P"}},
+
+		{6, 0, []string{"d", "w"}},
+		{6, 1, []string{"c", "w", "q", "u", "i", "c", "k", "esc"}},
+		{6, 2, []string{"c", "i", "w", "w", "o", "r", "d", "esc"}},
 	}
 
 	m := NewModel()

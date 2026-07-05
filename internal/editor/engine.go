@@ -1,8 +1,5 @@
 package editor
 
-// Input feeds one key token into the buffer. Key tokens are either a
-// single printable rune ("h", "3", "(", ...) or one of the special names:
-// "esc", "enter", "backspace", "tab".
 func (b *Buffer) Input(key string) {
 	if key == "" {
 		return
@@ -27,6 +24,3 @@ func (b *Buffer) Input(key string) {
 	}
 	b.clampCursor()
 }
-
-// key tokens are stored with a trailing NUL as a separator when recording
-// macros, since keys can be multi-rune strings like "esc".

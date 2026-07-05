@@ -104,8 +104,6 @@ func TestFindChar(t *testing.T) {
 	if b.Cursor.Col != 4 {
 		t.Fatalf("expected col 4 after fo, got %d", b.Cursor.Col)
 	}
-	// Cursor sits on the 'o' right before the space, so t's target equals
-	// the current column; since t is inclusive, dt deletes just that 'o'.
 	feed(b, "d", "t", " ")
 	if b.Text() != "hell world" {
 		t.Fatalf("expected 'hell world' after dt<space>, got %q", b.Text())
