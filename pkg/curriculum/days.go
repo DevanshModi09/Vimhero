@@ -720,4 +720,94 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 9,
+		Week:   "Week 2: More Operators",
+		Title:  "r and ~ — Replace One Character & Toggle Case",
+		Summary: "r{char} replaces the single character under the cursor with whatever you " +
+			"type next, without ever entering Insert mode — the fastest fix for a one-letter " +
+			"typo. Prefix it with a count, like 5rX, and it replaces that many characters in " +
+			"one shot. ~ toggles the case of the character under the cursor and steps forward " +
+			"one column, so mashing it repeatedly walks case-toggles across a whole run of " +
+			"letters.",
+		Challenges: []Challenge{
+			{
+				Title: "Replace One Letter",
+				Instructions: "r followed by a single character swaps in that character for " +
+					"whatever's under the cursor and leaves you in Normal mode — no i, no esc. " +
+					"\"fovorite\" below has one wrong letter; fix it with a single r.",
+				Tip: "Tip: r is the fastest way to fix a one-letter typo — x then i then esc " +
+					"does the same job in three separate steps.",
+				NewKeys:     []string{"r"},
+				Start:       []string{"This is my fovorite meal"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"This is my favorite meal"},
+				Par:         6,
+			},
+			{
+				Title: "Redact With A Count",
+				Instructions: "A count in front of r replaces that many characters in one move — " +
+					"5rX replaces the next 5 characters under and after the cursor with X, all at " +
+					"once. Use it to redact the 5-digit number below into XXXXX.",
+				Tip: "Tip: same count trick as 3dd or 7gg — r just applies it to how many " +
+					"characters get replaced instead of how many lines get affected.",
+				Start:       []string{"the code is 99999 today"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"the code is XXXXX today"},
+				Par:         6,
+			},
+			{
+				Title: "Toggle One Letter's Case",
+				Instructions: "~ flips the case of the character under the cursor — upper " +
+					"becomes lower, lower becomes upper — and moves the cursor forward one " +
+					"column afterward. \"worLd\" below has one letter in the wrong case; fix it " +
+					"with a single ~.",
+				Tip: "Tip: unlike r, ~ never asks for a second keystroke — it always toggles " +
+					"whatever's under the cursor right away.",
+				NewKeys:     []string{"~"},
+				Start:       []string{"Hello worLd"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"Hello world"},
+				Par:         5,
+			},
+			{
+				Title: "Toggle A Whole Run",
+				Instructions: "Because ~ steps forward after every toggle, you can fix a whole " +
+					"run of wrongly-cased letters just by mashing it — no need to move the " +
+					"cursor between each one. \"HELLO\" below is shouting; walk ~ across all 5 " +
+					"letters to calm it down.",
+				Tip: "Tip: this same step-forward-after-each-press pattern is what let x clear " +
+					"a run of characters back on Day 4 — ~ just toggles case instead of deleting.",
+				Start:       []string{"please say HELLO now"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"please say hello now"},
+				Par:         7,
+			},
+			{
+				Title: "Capstone",
+				Instructions: "Three lines, three different jobs: two adjacent wrong letters to " +
+					"fix with r on the first line, a shouted word to calm down with ~ on the " +
+					"second, and a number to redact with a count-prefixed r on the third.",
+				Tip: "Tip: b snaps back to the start of the word your cursor is already inside " +
+					"— handy for lining up before mashing ~ across an all-caps word.",
+				Start: []string{
+					"we had figt yesterday",
+					"keep it QUIET okay",
+					"id number 88888 here",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"we had five yesterday",
+					"keep it quiet okay",
+					"id number XXXXX here",
+				},
+				Par: 21,
+			},
+		},
+	},
 }

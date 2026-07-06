@@ -85,6 +85,16 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"j", "w", "w"},
 			[]string{"D"},
 		)},
+
+		{9, 0, []string{"w", "w", "w", "l", "r", "a"}},
+		{9, 1, []string{"w", "w", "w", "5", "r", "X"}},
+		{9, 2, []string{"w", "l", "l", "l", "~"}},
+		{9, 3, []string{"w", "w", "~", "~", "~", "~", "~"}},
+		{9, 4, []string{
+			"w", "w", "l", "l", "r", "v", "l", "r", "e",
+			"j", "b", "~", "~", "~", "~", "~",
+			"j", "w", "5", "r", "X",
+		}},
 	}
 
 	m := NewModel()
