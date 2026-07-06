@@ -18,6 +18,7 @@ type State struct {
 	Results     map[string]ChallengeResult `json:"results"`
 	Streak      int                        `json:"streak"`
 	LastPlayed  string                     `json:"last_played"`
+	Theme       int                        `json:"theme"`
 }
 
 func defaultState() *State {

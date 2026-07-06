@@ -6,9 +6,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"vimhero/internal/curriculum"
-	"vimhero/internal/editor"
 	"vimhero/internal/progress"
+	"vimhero/pkg/curriculum"
+	"vimhero/pkg/editor"
 )
 
 type screen int
@@ -17,6 +17,7 @@ const (
 	screenDayList screen = iota
 	screenChallengeList
 	screenPlay
+	screenThemes
 )
 
 type Model struct {
@@ -28,6 +29,7 @@ type Model struct {
 
 	dayCursor       int
 	challengeCursor int
+	themeCursor     int
 
 	dayIdx       int
 	challengeIdx int
@@ -42,8 +44,10 @@ type Model struct {
 }
 
 func NewModel() Model {
+	prog := progress.Load()
+	applyTheme(prog.Theme)
 	return Model{
-		prog:   progress.Load(),
+		prog:   prog,
 		days:   curriculum.All(),
 		screen: screenDayList,
 	}
@@ -71,18 +75,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.updateChallengeList(key)
 		case screenPlay:
 			return m.updatePlay(key)
+		case screenThemes:
+			return m.updateThemes(key)
 		}
 	}
 	return m, nil
 }
 
 func (m Model) updateDayList(key string) (tea.Model, tea.Cmd) {
+	themeRow := len(m.days)
 	switch key {
 	case "q":
 		m.quitting = true
 		return m, tea.Quit
+	case "t":
+		m.themeCursor = currentThemeIdx
+		m.screen = screenThemes
+		return m, nil
 	case "j", "down":
-		if m.dayCursor < len(m.days)-1 {
+		if m.dayCursor < themeRow {
 			m.dayCursor++
 		}
 	case "k", "up":
@@ -90,12 +101,38 @@ func (m Model) updateDayList(key string) (tea.Model, tea.Cmd) {
 			m.dayCursor--
 		}
 	case "enter", "l":
+		if m.dayCursor == themeRow {
+			m.themeCursor = currentThemeIdx
+			m.screen = screenThemes
+			return m, nil
+		}
 		day := m.days[m.dayCursor]
 		if m.prog.IsDayUnlocked(day.Number) {
 			m.dayIdx = m.dayCursor
 			m.challengeCursor = 0
 			m.screen = screenChallengeList
 		}
+	}
+	return m, nil
+}
+
+func (m Model) updateThemes(key string) (tea.Model, tea.Cmd) {
+	switch key {
+	case "esc", "q", "t":
+		m.screen = screenDayList
+	case "j", "down":
+		if m.themeCursor < len(themes)-1 {
+			m.themeCursor++
+		}
+	case "k", "up":
+		if m.themeCursor > 0 {
+			m.themeCursor--
+		}
+	case "enter":
+		applyTheme(m.themeCursor)
+		m.prog.Theme = m.themeCursor
+		_ = m.prog.Save()
+		m.screen = screenDayList
 	}
 	return m, nil
 }
@@ -130,6 +167,8 @@ func (m Model) updatePlay(key string) (tea.Model, tea.Cmd) {
 			m.screen = screenDayList
 			m.won = false
 			return m, nil
+		case "r":
+			return m.enterChallenge(m.dayIdx, m.challengeIdx), nil
 		case "esc":
 			m.screen = screenChallengeList
 			m.won = false
@@ -138,9 +177,14 @@ func (m Model) updatePlay(key string) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	if key == "esc" && m.buf.Mode == editor.ModeNormal {
-		m.screen = screenChallengeList
-		return m, nil
+	if m.buf.Mode == editor.ModeNormal {
+		switch key {
+		case "esc":
+			m.screen = screenChallengeList
+			return m, nil
+		case "ctrl+r":
+			return m.enterChallenge(m.dayIdx, m.challengeIdx), nil
+		}
 	}
 
 	m.buf.Input(key)
@@ -199,6 +243,8 @@ func (m Model) View() string {
 		return m.viewChallengeList()
 	case screenPlay:
 		return m.viewPlay()
+	case screenThemes:
+		return m.viewThemes()
 	}
 	return ""
 }
@@ -218,23 +264,32 @@ func (m Model) viewDayList() string {
 		status := ""
 		switch {
 		case locked:
-			status = lockedStyle.Render(" (locked)")
+			status = lockedStyle.Render(" locked")
 			label = lockedStyle.Render(label)
 		case cleared == total:
+			label = dayLineCleared.Render(label)
 			status = starStyle.Render(fmt.Sprintf(" ★ %d/3 avg", avgStars))
 		default:
-			status = dimStyle.Render(fmt.Sprintf(" (%d/%d cleared)", cleared, total))
+			status = dimStyle.Render(fmt.Sprintf(" %d/%d cleared", cleared, total))
 		}
 		if i == m.dayCursor && !locked {
+			marker = markerSelectedStyle.Render(marker)
 			label = dayLineSelected.Render(label)
 		}
 		b.WriteString(marker + label + status + "\n")
 	}
 	b.WriteString("\n")
 	if m.prog.Streak > 0 {
-		b.WriteString(dimStyle.Render(fmt.Sprintf("🔥 %d day streak", m.prog.Streak)) + "\n")
+		b.WriteString(streakStyle.Render(fmt.Sprintf("🔥 %d day streak", m.prog.Streak)) + "\n")
 	}
-	b.WriteString(helpStyle.Render("j/k move · enter select · q quit"))
+	themeMarker := ""
+	themeLabel := "🎨 Change Theme"
+	if m.dayCursor == len(m.days) {
+		themeMarker = markerSelectedStyle.Render("▸ ")
+		themeLabel = dayLineSelected.Render(themeLabel)
+	}
+	b.WriteString(themeMarker + themeLabel + dimStyle.Render(" (press t)") + "\n\n")
+	b.WriteString(helpStyle.Render("j/k move · enter select · t theme · q quit"))
 	return b.String()
 }
 
@@ -253,6 +308,28 @@ func (m Model) dayStars(day curriculum.Day) (avgStars, cleared, total int) {
 	return
 }
 
+func (m Model) viewThemes() string {
+	var b strings.Builder
+	b.WriteString(titleStyle.Render("Choose a Theme"))
+	b.WriteString("\n\n")
+	for i, t := range themes {
+		marker := "  "
+		name := challengeTitleStyle.Render(t.Name)
+		if i == m.themeCursor {
+			marker = markerSelectedStyle.Render("▸ ")
+			name = challengeSelectedStyle.Render(t.Name)
+		}
+		current := ""
+		if i == currentThemeIdx {
+			current = dimStyle.Render(" (current)")
+		}
+		b.WriteString(fmt.Sprintf("%s%s %s%s\n", marker, themeSwatch(t.Accent), name, current))
+	}
+	b.WriteString("\n")
+	b.WriteString(helpStyle.Render("j/k move · enter apply · esc back"))
+	return b.String()
+}
+
 func (m Model) viewChallengeList() string {
 	day := m.days[m.dayIdx]
 	var b strings.Builder
@@ -262,14 +339,16 @@ func (m Model) viewChallengeList() string {
 	b.WriteString("\n\n")
 	for i, ch := range day.Challenges {
 		marker := "  "
+		title := challengeTitleStyle.Render(ch.Title)
 		if i == m.challengeCursor {
-			marker = "▸ "
+			marker = markerSelectedStyle.Render("▸ ")
+			title = challengeSelectedStyle.Render(ch.Title)
 		}
 		stars := ""
 		if r, ok := m.prog.ChallengeResult(day.Number, i); ok && r.Cleared {
 			stars = " " + starStyle.Render(strings.Repeat("★", r.Stars)+strings.Repeat("☆", 3-r.Stars))
 		}
-		b.WriteString(fmt.Sprintf("%s%s%s\n", marker, ch.Title, stars))
+		b.WriteString(fmt.Sprintf("%s%s%s\n", marker, title, stars))
 	}
 	b.WriteString("\n")
 	b.WriteString(helpStyle.Render("j/k move · enter play · esc back"))
@@ -284,7 +363,11 @@ func (m Model) viewPlay() string {
 	b.WriteString(subtitleStyle.Width(m.contentWidth()).Render(m.challenge.Instructions))
 	b.WriteString("\n")
 	if len(m.challenge.NewKeys) > 0 {
-		b.WriteString(dimStyle.Render("New: " + strings.Join(m.challenge.NewKeys, "  ")))
+		chips := make([]string, len(m.challenge.NewKeys))
+		for i, k := range m.challenge.NewKeys {
+			chips[i] = newKeyStyle.Render(k)
+		}
+		b.WriteString(dimStyle.Render("New: ") + strings.Join(chips, " "))
 		b.WriteString("\n")
 	}
 	if m.challenge.Tip != "" {
@@ -313,11 +396,13 @@ func (m Model) viewPlay() string {
 	b.WriteString("\n\n")
 
 	if m.won {
-		b.WriteString(goodStyle.Render(fmt.Sprintf("Solved! %d keystrokes %s", m.wonKeys, strings.Repeat("★", m.wonStars)+strings.Repeat("☆", 3-m.wonStars))))
+		stars := strings.Repeat("★", m.wonStars) + strings.Repeat("☆", 3-m.wonStars)
+		msg := goodStyle.Render(fmt.Sprintf("🎉 Solved!  %d keystrokes  ", m.wonKeys)) + starStyle.Render(stars)
+		b.WriteString(winBoxStyle.Render(msg))
 		b.WriteString("\n")
-		b.WriteString(helpStyle.Render("enter: next · esc: back to day"))
+		b.WriteString(helpStyle.Render("enter: next · r: retry · esc: back to day"))
 	} else {
-		b.WriteString(helpStyle.Render("esc (normal mode): back to challenge list"))
+		b.WriteString(helpStyle.Render("esc (normal mode): back to challenge list · ctrl+r: restart"))
 	}
 	return b.String()
 }
