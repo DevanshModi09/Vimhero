@@ -25,20 +25,20 @@ func (b *Buffer) applyLinewise(op byte, reg rune, row1, row2 int) {
 		b.setRegister(reg, text, true)
 		rest := append([]string(nil), b.Lines[:row1]...)
 		rest = append(rest, b.Lines[row2+1:]...)
-		if len(rest) == 0 {
-			rest = []string{""}
-		}
-		b.Lines = rest
 		if op == 'd' {
+			if len(rest) == 0 {
+				rest = []string{""}
+			}
+			b.Lines = rest
 			b.Cursor.Row = row1
 			if b.Cursor.Row >= len(b.Lines) {
 				b.Cursor.Row = len(b.Lines) - 1
 			}
 			b.Cursor.Col = b.lineFirstNonBlank(b.Cursor.Row)
 		} else {
-			newLines := append([]string(nil), b.Lines[:row1]...)
+			newLines := append([]string(nil), rest[:row1]...)
 			newLines = append(newLines, "")
-			newLines = append(newLines, b.Lines[row1:]...)
+			newLines = append(newLines, rest[row1:]...)
 			b.Lines = newLines
 			b.Cursor.Row = row1
 			b.Cursor.Col = 0

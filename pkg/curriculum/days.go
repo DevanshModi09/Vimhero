@@ -810,4 +810,100 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 10,
+		Week:   "Week 2: More Operators",
+		Title:  "s and S — Substitute Character & Substitute Line",
+		Summary: "s deletes the character(s) under the cursor and drops you straight into " +
+			"Insert mode — like x followed by i in one command, except unlike r you can type " +
+			"back as many characters as you want instead of exactly one. A count in front, " +
+			"like 3s, deletes that many characters before you start typing. S goes bigger: it " +
+			"clears the entire line's content and drops you into Insert mode to type a full " +
+			"replacement — a count in front, like 2S, merges that many lines into whatever " +
+			"you type.",
+		Challenges: []Challenge{
+			{
+				Title: "Swap And Type",
+				Instructions: "s deletes the character under the cursor and puts you in Insert " +
+					"mode so you can type a replacement of any length — not just the single " +
+					"character r gives you. The line below has a digit that should be spelled " +
+					"out; land on the \"5\" and use s to swap it for \"five\".",
+				Tip: "Tip: s is really x then i as a single keystroke — but since it drops you " +
+					"into Insert mode, you're free to type more (or fewer) characters than you " +
+					"deleted.",
+				NewKeys:     []string{"s"},
+				Start:       []string{"I have 5 dogs"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"I have five dogs"},
+				Par:         8,
+			},
+			{
+				Title: "Count Before You Type",
+				Instructions: "A count in front of s deletes that many characters before " +
+					"dropping you into Insert mode — 3s deletes 3 characters, then whatever you " +
+					"type replaces them. The number below is wrong; delete all three digits with " +
+					"a count and type the fix.",
+				Tip: "Tip: same count pattern as 5rX from Day 9 — the count says how many " +
+					"characters to remove, except now you type the replacement yourself instead " +
+					"of it being one repeated character.",
+				Start:       []string{"The CPU is 100% busy"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"The CPU is 50% busy"},
+				Par:         8,
+			},
+			{
+				Title: "Rewrite The Line",
+				Instructions: "S clears the whole line and drops you into Insert mode to type a " +
+					"full replacement, no matter where on the line your cursor started. The line " +
+					"below is a mess from end to end; use S to throw it all away and type a " +
+					"clean one.",
+				Tip: "Tip: S is a shortcut for typing cc (Vim's change-the-whole-line command) " +
+					"— same result, one less keystroke, and you don't need to be at column 0 " +
+					"first.",
+				NewKeys:     []string{"S"},
+				Start:       []string{"this line is a mess and wrong"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"this line is correct now"},
+				Par:         26,
+			},
+			{
+				Title: "Merge Two Into One",
+				Instructions: "A count in front of S works just like it does for dd or yy — 2S " +
+					"clears 2 lines and drops you into Insert mode once, so whatever you type " +
+					"becomes a single line replacing both. Merge the two rough draft lines below " +
+					"into the one clean line shown as the target.",
+				Tip: "Tip: this is how you combine two lines into one without ever touching dd " +
+					"— delete-and-retype in one motion instead of two separate steps.",
+				Start:       []string{"draft line one", "draft line two"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"final combined line"},
+				Par:         22,
+			},
+			{
+				Title: "Capstone",
+				Instructions: "Three lines, three jobs: a number to spell out with a " +
+					"count-prefixed s, a whole line to rewrite with S, and a typo'd word to " +
+					"replace with a count-prefixed s.",
+				Tip: "Tip: S doesn't care what column you're on when you press it — land " +
+					"anywhere on the line and it clears the whole thing.",
+				Start: []string{
+					"the score is 42 points",
+					"this whole line is nonsense and needs replacing",
+					"fix typo1 in here",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"the score is one hundred points",
+					"clean sentence here",
+					"fix this in here",
+				},
+				Par: 50,
+			},
+		},
+	},
 }
