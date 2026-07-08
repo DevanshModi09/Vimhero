@@ -139,7 +139,7 @@ func TestCurriculumSolvable(t *testing.T) {
 		{12, 4, []string{
 			"4", "l", "X",
 			"j", "0",
-			"9", "l", "5", "X",
+			"5", "l", "5", "X",
 			"j", "0",
 			"w", "d", "w", "u", "0", "d", "w",
 		}},
