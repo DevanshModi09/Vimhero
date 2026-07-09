@@ -1499,4 +1499,102 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 16,
+		Week:   "Week 3: Counts & Text Objects",
+		Title:  "i( and i\" — Text Objects For Brackets & Quotes",
+		Summary: "iw and aw grab a word, but text objects aren't limited to words: i( grabs " +
+			"everything inside a pair of parentheses, a( grabs the parentheses too, and i\" " +
+			"does the same trick for quoted text. Your cursor doesn't need to sit right next " +
+			"to the ( or the \" either — anywhere inside the pair works, because Vim scans " +
+			"outward to find the enclosing delimiters for you.",
+		Challenges: []Challenge{
+			{
+				Title: "Clear The Call's Arguments",
+				Instructions: "di( deletes everything between a pair of parentheses without " +
+					"touching the parentheses themselves — same idea as diw, just a new pair " +
+					"of delimiters instead of word boundaries. Your cursor is already sitting " +
+					"inside the parens; press di( to empty them out.",
+				Tip: "Tip: you don't need to be right after the ( — di( works from anywhere " +
+					"inside the pair, because Vim searches outward for the nearest enclosing " +
+					"( and ).",
+				NewKeys:     []string{"di("},
+				Start:       []string{"run(old broken code)"},
+				CursorStart: Pos{0, 5},
+				Kind:        KindEdit,
+				Target:      []string{"run()"},
+				Par:         3,
+			},
+			{
+				Title: "Remove The Whole Aside",
+				Instructions: "a( means 'around parentheses' — pair it with d and it deletes " +
+					"the parentheses themselves along with everything inside them, unlike i( " +
+					"which leaves the parens standing. Use da( to cut the whole aside out of " +
+					"this line.",
+				Tip: "Tip: i( vs a( is the same inside/around split as iw vs aw — i( leaves " +
+					"the delimiters behind, a( takes them with it.",
+				NewKeys:     []string{"da("},
+				Start:       []string{"keep this (delete this aside) part"},
+				CursorStart: Pos{0, 20},
+				Kind:        KindEdit,
+				Target:      []string{"keep this  part"},
+				Par:         3,
+			},
+			{
+				Title: "Swap The Argument",
+				Instructions: "c works with parenthesis text objects too: ci( clears " +
+					"everything inside the parens and drops you into Insert mode right where " +
+					"they used to be, ready to type a replacement.",
+				Tip: "Tip: ci( works exactly like ciw — the c, i pattern never changes, only " +
+					"the delimiter after it does.",
+				NewKeys:     []string{"ci("},
+				Start:       []string{"print(placeholder)"},
+				CursorStart: Pos{0, 10},
+				Kind:        KindEdit,
+				Target:      []string{"print(42)"},
+				Par:         6,
+			},
+			{
+				Title: "Rename The Quoted File",
+				Instructions: "Quotes work as a text object too, with the exact same i/a " +
+					"rule: ci\" clears whatever sits between a pair of double quotes and " +
+					"drops you into Insert mode to type a replacement, just like ci( did for " +
+					"parentheses.",
+				Tip: "Tip: i\" and a\" follow the identical inside/around split as every " +
+					"other text object you've learned — only the delimiter changes.",
+				NewKeys:     []string{"ci\""},
+				Start:       []string{"open the file \"notes.txt\" and read it"},
+				CursorStart: Pos{0, 18},
+				Kind:        KindEdit,
+				Target:      []string{"open the file \"config.yaml\" and read it"},
+				Par:         15,
+			},
+			{
+				Title: "Capstone",
+				Instructions: "Four lines, every bracket and quote trick from today: empty " +
+					"a call's arguments with di(, cut a whole parenthetical aside with da(, " +
+					"swap a call's argument with ci(, and rename a quoted value with ci\". " +
+					"Use f( or f\" to jump onto the delimiter first on lines where your " +
+					"cursor isn't already inside it.",
+				Tip: "Tip: landing exactly on the ( or \" works just as well as landing " +
+					"somewhere inside it — Vim only cares that you're inside the pair, " +
+					"including its edges.",
+				Start: []string{
+					"run(old broken code)",
+					"keep this (delete this aside) part",
+					"print(placeholder)",
+					"open the file \"notes.txt\" and read it",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"run()",
+					"keep this  part",
+					"print(42)",
+					"open the file \"config.yaml\" and read it",
+				},
+				Par: 41,
+			},
+		},
+	},
 }

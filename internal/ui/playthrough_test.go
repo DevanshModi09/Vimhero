@@ -205,6 +205,20 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"j", "0", "3", "y", "y"},
 			[]string{"G", "p"},
 		)},
+
+		{16, 0, []string{"d", "i", "("}},
+		{16, 1, []string{"d", "a", "("}},
+		{16, 2, append([]string{"c", "i", "("}, append(typeStr("42"), "esc")...)},
+		{16, 3, append([]string{"c", "i", "\""}, append(typeStr("config.yaml"), "esc")...)},
+		{16, 4, concatKeys(
+			[]string{"f", "(", "d", "i", "("},
+			[]string{"j", "0"},
+			[]string{"f", "(", "d", "a", "("},
+			[]string{"j", "0"},
+			append([]string{"f", "(", "c", "i", "("}, append(typeStr("42"), "esc")...),
+			[]string{"j", "0"},
+			append([]string{"f", "\"", "c", "i", "\""}, append(typeStr("config.yaml"), "esc")...),
+		)},
 	}
 
 	m := NewModel()
