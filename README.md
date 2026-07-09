@@ -12,15 +12,15 @@ a real hand-built modal editor — not a wrapper around your system's
 
 ```
 ╭────────────────────────────────────────────────────────────────╮
-│ Day 14 — Final Boss (Everything From Days 1-13)                 │
+│ Day 14 — Final Boss (Everything From Days 1-13)                │
 │                                                                │
-│ A whole messy document, twelve lines, one pass — every tool     │
+│ A whole messy document, twelve lines, one pass — every tool    │
 │ from Days 1-13, back to back.                                  │
 │                                                                │
-│ 💡 Work top to bottom, one problem at a time — this one's      │
+│ Work top to bottom, one problem at a time - this one's         │
 │ meant to take a few minutes, not a few seconds.                │
 │                                                                │
-│     XXXX this document has a messy header                     │
+│     XXXX this document has a messy header                      │
 │                                                                │
 │ NORMAL   keystrokes: 0   par: 100                              │
 ╰────────────────────────────────────────────────────────────────╯
