@@ -1,5 +1,5 @@
 # VimHero
-
+Alr am gonna add a super hard challange in day 21 . full revision typa 
 ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)
 ![Curriculum](https://img.shields.io/badge/curriculum-20%2F45%20days-blueviolet)
 ![Engine](https://img.shields.io/badge/vim%20engine-hand--built-orange)
