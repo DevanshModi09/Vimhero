@@ -2134,4 +2134,129 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 22,
+		Week:   "Week 4: Find & Search",
+		Title:  "f, F, t, T — Jump Straight To Any Character",
+		Summary: "A whole new family of motions: instead of stepping one cell at a time, " +
+			"jump straight to a character anywhere on the current line. f{char} jumps " +
+			"forward and lands ON the character. F{char} jumps backward and lands ON it " +
+			"too. t{char} jumps forward and stops just BEFORE it. T{char} jumps backward " +
+			"and stops just AFTER it. Then ; repeats the last find in the same direction, " +
+			"and , repeats it in the opposite direction — so you almost never retype the " +
+			"character. These combine with operators exactly like any other motion: df, " +
+			"dt, cf, ct all work.",
+		Challenges: []Challenge{
+			{
+				Title: "f — Jump Forward, Land On The Character",
+				Instructions: "f{char} scans forward on this line and drops the cursor " +
+					"exactly on the next occurrence of that character. Press f then o to " +
+					"land on the o in \"box\" — then press f then o again to jump past it " +
+					"to the next o, in \"dozen\". That's the goal.",
+				Tip: "Tip: f doesn't wrap to the next line and doesn't care about words — " +
+					"it only cares about the exact character you give it, anywhere ahead " +
+					"of the cursor on the current line.",
+				Start: []string{
+					"pack my box with five dozen liquor jugs",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindGoal,
+				GoalPos:     Pos{0, 23},
+				Par:         4,
+			},
+			{
+				Title: "F and T — Jump Backward, On It Or Just After It",
+				Instructions: "F{char} is f in reverse: scan backward, land ON the " +
+					"character. T{char} also scans backward, but stops just AFTER it — " +
+					"the mirror image of t. Starting from the end of this line, press F " +
+					"then j to land on the j in \"jumps\", then T then t to jump further " +
+					"back and stop right after the t in \"the\".",
+				Tip: "Tip: T stopping just after the character (instead of on it) is " +
+					"exactly like t, just facing the other direction — same rule, " +
+					"opposite scan direction.",
+				Start: []string{
+					"the quick brown fox jumps over the lazy dog",
+				},
+				CursorStart: Pos{0, 42},
+				Kind:        KindGoal,
+				GoalPos:     Pos{0, 1},
+				Par:         4,
+			},
+			{
+				Title: "dt, df, ct, cf — Find Meets An Operator",
+				Instructions: "Any operator can take a find-motion instead of a plain " +
+					"motion. On line 1, ct: changes everything up to (not including) the " +
+					"colon — the colon survives, exactly like ciw vs diw all over again. " +
+					"On line 2, df: deletes everything up to AND including the colon in " +
+					"one shot — no separate x needed to clean up the delimiter.",
+				Tip: "Tip: t is exclusive (stops short, the boundary character survives), " +
+					"f is inclusive (eats the boundary character too) — same distinction " +
+					"as di( vs the character itself, just for find-motions now.",
+				Start: []string{
+					"URGENT: fix this bug",
+					"DELETE-ME:keep this text",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"note: fix this bug",
+					"keep this text",
+				},
+				Par: 13,
+			},
+			{
+				Title: "; and , — Repeat The Last Find",
+				Instructions: "; repeats your last f/F/t/T in the same direction, and , " +
+					"repeats it in the opposite direction — no retyping the character. " +
+					"On line 1, use f, then ; once to hop two commas over and land right " +
+					"before \"blue\", then fix it. On line 2, use f, then ; twice to " +
+					"overshoot to the comma before \"date\", then , once to step back to " +
+					"the comma before \"cherry\", then fix that instead.",
+				Tip: "Tip: , is perfect for exactly this — you overshoot by one while " +
+					"chaining ;, so instead of starting the whole search over you just " +
+					"tap , once to back up a single step.",
+				Start: []string{
+					"red,green,blue,yellow,purple",
+					"apple,banana,cherry,date,fig",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"red,green,black,yellow,purple",
+					"apple,banana,grape,date,fig",
+				},
+				Par: 30,
+			},
+			{
+				Title: "Find Everything — A Log File Full Of Fixes",
+				Instructions: "Five lines, five different find-motion tricks. Line 1: " +
+					"jump to the swapped i with f, then fix the recieve/receive typo " +
+					"with the classic xp swap. Line 2: jump to the P in PENDING with f, " +
+					"then ct: to rename it to DONE. Line 3: df with a space deletes the " +
+					"whole [DEBUG] tag in one inclusive find. Line 4: from the end of the " +
+					"line, F back to the W in Warn and fix it with ciw. Line 5: f: then " +
+					"; twice to reach the third field, then ciw to fix its value.",
+				Tip: "Tip: nothing here is a new key — it's f, F, t, T, and ; doing the " +
+					"legwork so that x, p, ciw, and c can land exactly where they need to " +
+					"without a single wasted hjkl step.",
+				Start: []string{
+					"recieve the shipment confirmation first",
+					"STATUS-PENDING: awaiting review",
+					"[DEBUG] connection established",
+					"log entry: level=Warn source=Legacy-Module",
+					"CPU:12,MEM:45,DISK:78,NET:33",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"receive the shipment confirmation first",
+					"STATUS-DONE: awaiting review",
+					"connection established",
+					"log entry: level=Error source=Legacy-Module",
+					"CPU:12,MEM:45,DISK:90,NET:33",
+				},
+				Par: 47,
+			},
+		},
+	},
 }

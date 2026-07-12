@@ -328,6 +328,24 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"j", "0", "Y", "p", "w", "w", "c", "i", "w"}, typeStr("final"), []string{"esc"},
 			[]string{"G", "o"}, typeStr("report complete"), []string{"esc"},
 		)},
+
+		{22, 0, []string{"f", "o", "f", "o"}},
+		{22, 1, []string{"F", "j", "T", "t"}},
+		{22, 2, concatKeys(
+			[]string{"c", "t", ":"}, typeStr("note"), []string{"esc"},
+			[]string{"j", "0", "d", "f", ":"},
+		)},
+		{22, 3, concatKeys(
+			[]string{"f", ",", ";", "l", "c", "i", "w"}, typeStr("black"), []string{"esc"},
+			[]string{"j", "0", "f", ",", ";", ";", ",", "l", "c", "i", "w"}, typeStr("grape"), []string{"esc"},
+		)},
+		{22, 4, concatKeys(
+			[]string{"f", "i", "x", "p"},
+			[]string{"j", "0", "f", "P", "c", "t", ":"}, typeStr("DONE"), []string{"esc"},
+			[]string{"j", "0", "d", "f", " "},
+			[]string{"j", "$", "F", "W", "c", "i", "w"}, typeStr("Error"), []string{"esc"},
+			[]string{"j", "0", "f", ":", ";", ";", "l", "c", "i", "w"}, typeStr("90"), []string{"esc"},
+		)},
 	}
 
 	m := NewModel()
