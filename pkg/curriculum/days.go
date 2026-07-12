@@ -2335,6 +2335,32 @@ var days = []Day{
 				},
 				Par: 23,
 			},
+			{
+				Title: "N — Repeat In The Opposite Direction",
+				Instructions: "Starting from the bottom, search backward for ok, then " +
+					"press n twice more to keep walking backward. That overshoots past " +
+					"server-c. Press N once to reverse direction and step back onto it, " +
+					"then fix it with ciw.",
+				Tip: "Tip: N is the escape hatch for exactly this — walk too far with n " +
+					"and a single N walks back one step without restarting the search.",
+				Start: []string{
+					"server-a: status ok",
+					"server-b: status ok",
+					"server-c: status ok",
+					"server-d: status ok",
+					"server-e: status ok",
+				},
+				CursorStart: Pos{4, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"server-a: status ok",
+					"server-b: status ok",
+					"server-c: status down",
+					"server-d: status ok",
+					"server-e: status ok",
+				},
+				Par: 15,
+			},
 		},
 	},
 }

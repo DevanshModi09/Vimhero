@@ -353,6 +353,10 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"/"}, typeStr("pending"), []string{"enter"},
 			[]string{"n", "n", "c", "i", "w"}, typeStr("complete"), []string{"esc"},
 		)},
+		{23, 3, concatKeys(
+			[]string{"?"}, typeStr("ok"), []string{"enter"},
+			[]string{"n", "n", "N", "c", "i", "w"}, typeStr("down"), []string{"esc"},
+		)},
 	}
 
 	m := NewModel()
