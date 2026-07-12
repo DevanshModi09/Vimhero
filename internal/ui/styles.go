@@ -1,6 +1,10 @@
 package ui
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"strings"
+
+	"github.com/charmbracelet/lipgloss"
+)
 
 var (
 	colorAccent  = lipgloss.Color("99")
@@ -40,6 +44,8 @@ var (
 	goalCellStyle          lipgloss.Style
 	tipStyle               lipgloss.Style
 	newKeyStyle            lipgloss.Style
+	gutterStyle            lipgloss.Style
+	gutterCurrentStyle     lipgloss.Style
 )
 
 func init() {
@@ -82,4 +88,16 @@ func buildStyles() {
 
 	tipStyle = lipgloss.NewStyle().Foreground(colorTip)
 	newKeyStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("0")).Background(colorAccent).Padding(0, 1)
+
+	gutterStyle = lipgloss.NewStyle().Foreground(colorMuted)
+	gutterCurrentStyle = lipgloss.NewStyle().Bold(true).Foreground(colorAccent)
+}
+
+func renderHeader(title string, width int) string {
+	if width <= 0 {
+		return titleStyle.Render(title)
+	}
+	bar := titleStyle.Width(width).Align(lipgloss.Center).Render(title)
+	rule := dimStyle.Render(strings.Repeat("─", width))
+	return bar + "\n" + rule
 }

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -212,6 +213,13 @@ func (m Model) contentWidth() int {
 	return w - 4
 }
 
+func (m Model) fullWidth() int {
+	if m.width <= 0 {
+		return 80
+	}
+	return m.width
+}
+
 func (m Model) checkWin() bool {
 	switch m.challenge.Kind {
 	case curriculum.KindGoal:
@@ -281,7 +289,7 @@ func fitToHeight(s string, height int) string {
 
 func (m Model) viewDayList() string {
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("VimHero — Zero to Hero in 45 Days"))
+	b.WriteString(renderHeader("VimHero — Zero to Hero in 45 Days", m.fullWidth()))
 	b.WriteString("\n\n")
 	for i, day := range m.days {
 		marker := "  "
@@ -341,9 +349,7 @@ func (m Model) dayStars(day curriculum.Day) (avgStars, cleared, total int) {
 }
 
 func (m Model) viewThemes() string {
-	var b strings.Builder
-	b.WriteString(titleStyle.Render("Choose a Theme"))
-	b.WriteString("\n\n")
+	var list strings.Builder
 	for i, t := range themes {
 		marker := "  "
 		name := challengeTitleStyle.Render(t.Name)
@@ -355,20 +361,21 @@ func (m Model) viewThemes() string {
 		if i == currentThemeIdx {
 			current = dimStyle.Render(" (current)")
 		}
-		b.WriteString(fmt.Sprintf("%s%s %s%s\n", marker, themeSwatch(t.Accent), name, current))
+		list.WriteString(fmt.Sprintf("%s%s %s%s\n", marker, themeSwatch(t.Accent), name, current))
 	}
-	b.WriteString("\n")
+
+	var b strings.Builder
+	b.WriteString(renderHeader("Choose a Theme", m.fullWidth()))
+	b.WriteString("\n\n")
+	b.WriteString(boxStyle.Render(strings.TrimRight(list.String(), "\n")))
+	b.WriteString("\n\n")
 	b.WriteString(helpStyle.Render("j/k move · enter apply · esc back"))
 	return b.String()
 }
 
 func (m Model) viewChallengeList() string {
 	day := m.days[m.dayIdx]
-	var b strings.Builder
-	b.WriteString(titleStyle.Render(fmt.Sprintf("Day %d — %s", day.Number, day.Title)))
-	b.WriteString("\n\n")
-	b.WriteString(subtitleStyle.Width(m.contentWidth()).Render(day.Summary))
-	b.WriteString("\n\n")
+	var list strings.Builder
 	for i, ch := range day.Challenges {
 		marker := "  "
 		title := challengeTitleStyle.Render(ch.Title)
@@ -380,9 +387,16 @@ func (m Model) viewChallengeList() string {
 		if r, ok := m.prog.ChallengeResult(day.Number, i); ok && r.Cleared {
 			stars = " " + starStyle.Render(strings.Repeat("★", r.Stars)+strings.Repeat("☆", 3-r.Stars))
 		}
-		b.WriteString(fmt.Sprintf("%s%s%s\n", marker, title, stars))
+		list.WriteString(fmt.Sprintf("%s%s%s\n", marker, title, stars))
 	}
-	b.WriteString("\n")
+
+	var b strings.Builder
+	b.WriteString(renderHeader(fmt.Sprintf("Day %d — %s", day.Number, day.Title), m.fullWidth()))
+	b.WriteString("\n\n")
+	b.WriteString(subtitleStyle.Width(m.contentWidth()).Render(day.Summary))
+	b.WriteString("\n\n")
+	b.WriteString(boxStyle.Render(strings.TrimRight(list.String(), "\n")))
+	b.WriteString("\n\n")
 	b.WriteString(helpStyle.Render("j/k move · enter play · esc back"))
 	return b.String()
 }
@@ -390,7 +404,7 @@ func (m Model) viewChallengeList() string {
 func (m Model) viewPlay() string {
 	var b strings.Builder
 	day := m.days[m.dayIdx]
-	b.WriteString(titleStyle.Render(fmt.Sprintf("Day %d — %s", day.Number, m.challenge.Title)))
+	b.WriteString(renderHeader(fmt.Sprintf("Day %d — %s", day.Number, m.challenge.Title), m.fullWidth()))
 	b.WriteString("\n\n")
 	b.WriteString(subtitleStyle.Width(m.contentWidth()).Render(m.challenge.Instructions))
 	b.WriteString("\n")
@@ -456,10 +470,18 @@ func (m Model) modeBadge() string {
 
 func (m Model) renderBuffer() string {
 	var b strings.Builder
+	gutterW := len(strconv.Itoa(len(m.buf.Lines)))
 	for row, line := range m.buf.Lines {
 		if row > 0 {
 			b.WriteString("\n")
 		}
+		num := fmt.Sprintf("%*d", gutterW, row+1)
+		if row == m.buf.Cursor.Row {
+			b.WriteString(gutterCurrentStyle.Render(num))
+		} else {
+			b.WriteString(gutterStyle.Render(num))
+		}
+		b.WriteString(dimStyle.Render(" │ "))
 		runes := []rune(line)
 		if len(runes) == 0 {
 			if m.isGoalCell(row, 0) {
