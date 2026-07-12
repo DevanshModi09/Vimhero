@@ -1,7 +1,6 @@
 # VimHero
-Alr am gonna add a super hard challange in day 21 . full revision typa 
 ![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)
-![Curriculum](https://img.shields.io/badge/curriculum-20%2F45%20days-blueviolet)
+![Curriculum](https://img.shields.io/badge/curriculum-21%2F45%20days-blueviolet)
 ![Engine](https://img.shields.io/badge/vim%20engine-hand--built-orange)
 
 **A terminal game that teaches Vim from zero to hero, one day at a time.**
@@ -85,7 +84,7 @@ Clearing every challenge in a day unlocks the next one.
 | ---- | ----- | ------------------------------------------------- | ------------------------- |
 | 1    | 1–5   | Basic movement & modes                            | ✅ done                   |
 | 2    | 6–14  | More operators (`cw`, `ciw`, `daw`, `D`/`C`, `r`/`~`, `s`/`S`, `X`/`u`, `0`/`^`/`$`, ...) | ✅ done |
-| 3    | 15–21 | Counts & text objects                             | ⏳ planned                |
+| 3    | 15–21 | Counts & text objects (+ Day 21 full-revision boss) | ✅ done                 |
 | 4    | 22–28 | Find & search                                     | ⏳ planned                |
 | 5    | 29–35 | Visual mode                                       | ⏳ planned                |
 | 6    | 36–42 | Marks, macros, substitution, global               | ⏳ planned                |

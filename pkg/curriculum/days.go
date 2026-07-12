@@ -1920,4 +1920,218 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 21,
+		Week:   "Week 3: Full Revision",
+		Title:  "Full Revision — The Ultimate Boss (Everything From Days 1-20)",
+		Summary: "No new keys today — this is the hardest day yet, and it's built to prove " +
+			"you actually own everything from the last three weeks, not just recognize it. " +
+			"Five challenges, each pulling from a different stretch of the curriculum: basic " +
+			"movement and line ops, word operators and text objects, replace/substitute/undo " +
+			"and the line-position motions, counts with every bracket-and-quote text object " +
+			"plus yanking them, and a genuinely long final-boss document that mixes all of it " +
+			"together in one continuous pass. Take your time — this is meant to feel like a " +
+			"real workout, not a quick clear.",
+		Challenges: []Challenge{
+			{
+				Title: "Movement, Insert & Line Ops",
+				Instructions: "Five lines, only Week 1 tools. Fix the stray digit in the " +
+					"first line with l, x, and i. Skip the second line completely — not " +
+					"every line needs touching. Delete the third line outright with dd. " +
+					"Duplicate the fourth line below itself with yy and p. Then jump to " +
+					"the very last line with G and tack a suffix on with A.",
+				Tip: "Tip: nothing here is new — hjkl, i/a/o/O, gg/G/x, and dd/yy/p/P are " +
+					"exactly what they were in Week 1. The only new part is chaining five " +
+					"of them without stopping to think about each one in isolation.",
+				Start: []string{
+					"wor1d needs a fix",
+					"jump target line stays put",
+					"extra line to remove completely",
+					"footer text to duplicate",
+					"last line needs a suffix",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"world needs a fix",
+					"jump target line stays put",
+					"footer text to duplicate",
+					"footer text to duplicate",
+					"last line needs a suffix - done",
+				},
+				Par: 24,
+			},
+			{
+				Title: "Word Operators & Text Objects",
+				Instructions: "Seven lines, one job each. dw removes a word plus its " +
+					"trailing space. cw only touches the word itself — the classic quirk " +
+					"from Day 6. ciw is the explicit version of that same quirk. diw " +
+					"deletes just the word and leaves the surrounding whitespace alone. " +
+					"daw cleans up the whitespace too. D cuts to the end of the line from " +
+					"wherever the cursor sits, and C does the same but drops you into " +
+					"Insert mode to type a replacement.",
+				Tip: "Tip: diw vs daw is the detail people forget fastest — diw leaves a " +
+					"gap behind, daw doesn't. If a line ends up with a double space after " +
+					"an edit, that's diw working exactly as designed.",
+				Start: []string{
+					"quick brown extra fox jumps",
+					"typo old word stays put",
+					"clean inner word please fix",
+					"remove inner gap word please",
+					"trim around this word right here",
+					"cut this tail right after here",
+					"replace this tail right after here",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"quick brown fox jumps",
+					"typo new word stays put",
+					"clean outer word please fix",
+					"remove inner  word please",
+					"trim around word right here",
+					"cut this tail",
+					"replace this tail section",
+				},
+				Par: 62,
+			},
+			{
+				Title: "Replace, Substitute & Line Motions",
+				Instructions: "Nine lines pulling from Days 9-13: r to swap one character, " +
+					"~ to flip case a run at a time, s to substitute a character (with a " +
+					"typed replacement), S to rewrite a whole line, a counted X to delete " +
+					"backward through a garbage prefix, u to undo a wrong delete before " +
+					"redoing it correctly, and 0/^/$ to prepend a note, cut trailing junk, " +
+					"and replace an indented prefix.",
+				Tip: "Tip: undo reverts one whole action, not one keystroke — so u after a " +
+					"multi-character insert or a whole dw undoes all of it in a single " +
+					"press, exactly like it did back on Day 12.",
+				Start: []string{
+					"cat sat on the mit",
+					"hello WORLD",
+					"fix 5 items today",
+					"old placeholder line",
+					"###keep this",
+					"alpha beta gamma delta",
+					"    fix the indentation on this line",
+					"keep this good part TRASH from here onward",
+					"    XXXX apply the fix here too",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"cat sat on the mat",
+					"HELLO world",
+					"fix five items today",
+					"brand new line content",
+					"keep this",
+					"beta gamma delta",
+					"NOTE:     fix the indentation on this line",
+					"keep this good part ",
+					"    DONE: apply the fix here too",
+				},
+				Par: 101,
+			},
+			{
+				Title: "Counts, Every Text Object & Y",
+				Instructions: "Everything from Days 15-20 in one pass: 3dd to delete a " +
+					"block with a count, then all five bracket-and-quote text objects — " +
+					"i(, i[, i{, and i' — each fixing a value inside its pair, then three " +
+					"yank-and-fix pairs using yiw, yi(, and yi\" to copy a correct value " +
+					"from one line into a broken one below it, and finally Y and p to " +
+					"duplicate a template line the fast way.",
+				Tip: "Tip: y never touches the buffer — on the yank/paste pairs, delete " +
+					"the wrong value first, yank the right one second, and paste last, or " +
+					"the delete will overwrite whatever you just yanked.",
+				Start: []string{
+					"skip one",
+					"skip two",
+					"skip three",
+					"keep this one",
+					"call(oldArg, extra)",
+					"arr[0] stays",
+					"{debug=false}",
+					"name is 'Alice' today",
+					"status = active",
+					"status = pending",
+					"scale(2.0)",
+					"scale(1.0)",
+					`name = "Alice"`,
+					`name = "Bob"`,
+					"keep me twice",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"keep this one",
+					"call(newArg)",
+					"arr[42] stays",
+					"{debug=true}",
+					"name is 'Bob' today",
+					"status = active",
+					"status = active",
+					"scale(2.0)",
+					"scale(2.0)",
+					`name = "Alice"`,
+					`name = "Alice"`,
+					"keep me twice",
+					"keep me twice",
+				},
+				Par: 104,
+			},
+			{
+				Title: "Final Boss — Everything From Days 1-20",
+				Instructions: "One long document, fourteen lines, every tool from the last " +
+					"three weeks back to back: a garbage prefix to replace with c^, a " +
+					"duplicated line to remove with dd, a typo to fix with ciw, an entire " +
+					"junk line to delete, a number inside parens to redact with ci(, a " +
+					"shouted line to fix with repeated ~, a trailing phrase to trim with " +
+					"D, three lines to reorder with dd/P, a single-quoted value to change " +
+					"with ci', a bracketed index to change with ci[, a template line to " +
+					"duplicate and customize with Y/p/ciw, and a brand new closing line to " +
+					"add at the very end with G and o. Nothing here is new — it's every " +
+					"single tool from Days 1-20, on a document big enough to actually take " +
+					"real time to clear properly.",
+				Tip: "Tip: work top to bottom and don't rush. If you get stuck on any one " +
+					"line, it's testing exactly one thing from one specific earlier day — " +
+					"think back to which day taught that shape of problem and the tool " +
+					"will come back to you.",
+				Start: []string{
+					"    XXXX quarterly report begins here",
+					"the numbers below need review",
+					"the numbers below need review",
+					"we fond a typo in this sentence",
+					"delete this entire line of scratch notes",
+					"budget(999) needs redacting",
+					"STOP SHOUTING in this summary",
+					"trim the tail needless extra words here",
+					"cherry",
+					"banana",
+					"apple",
+					"config = 'debug'",
+					"list[0] = old",
+					"status: draft",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"    DONE: quarterly report begins here",
+					"the numbers below need review",
+					"we found a typo in this sentence",
+					"budget(XXX) needs redacting",
+					"stop shouting in this summary",
+					"trim the tail",
+					"apple",
+					"cherry",
+					"banana",
+					"config = 'release'",
+					"list[1] = old",
+					"status: draft",
+					"status: final",
+					"report complete",
+				},
+				Par: 128,
+			},
+		},
+	},
 }
