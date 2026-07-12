@@ -2290,6 +2290,25 @@ var days = []Day{
 				GoalPos:     Pos{3, 0},
 				Par:         7,
 			},
+			{
+				Title: "? — Search Backward",
+				Instructions: "Same idea, opposite direction. Starting from the bottom of " +
+					"this list, press ? followed by configure and enter to jump backward " +
+					"to the line that mentions it.",
+				Tip: "Tip: ? is to / what F is to f — same search, just scanning upward " +
+					"through the buffer instead of downward.",
+				Start: []string{
+					"step one: prepare",
+					"step two: configure",
+					"step three: deploy",
+					"step four: verify",
+					"step five: cleanup",
+				},
+				CursorStart: Pos{4, 0},
+				Kind:        KindGoal,
+				GoalPos:     Pos{1, 10},
+				Par:         11,
+			},
 		},
 	},
 }
