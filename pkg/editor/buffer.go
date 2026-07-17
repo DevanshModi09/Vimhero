@@ -38,16 +38,17 @@ type Buffer struct {
 
 	visualStart Pos
 
-	registers     map[rune]regContent
-	marks         map[rune]Pos
-	lastFind      pendingFind
-	searchPattern string
-	searchDir     int
-	recordingReg  rune
-	macroBuf      strings.Builder
-	macros        map[rune]string
-	replayDepth   int
-	lastMacroReg  rune
+	registers       map[rune]regContent
+	marks           map[rune]Pos
+	lastFind        pendingFind
+	searchPattern   string
+	searchDir       int
+	pendingSearchOp byte
+	recordingReg    rune
+	macroBuf        strings.Builder
+	macros          map[rune]string
+	replayDepth     int
+	lastMacroReg    rune
 
 	CommandLine string
 	commandKind byte

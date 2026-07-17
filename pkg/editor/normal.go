@@ -172,6 +172,24 @@ func (b *Buffer) handleNormal(key string) {
 		b.repeatFind(1)
 	case ",":
 		b.repeatFind(-1)
+	case "/":
+		op := b.pendingOp
+		b.resetPending()
+		b.pendingSearchOp = op
+		b.Mode = ModeCommand
+		b.commandKind = '/'
+		b.CommandLine = ""
+		b.searchDir = 1
+		return
+	case "?":
+		op := b.pendingOp
+		b.resetPending()
+		b.pendingSearchOp = op
+		b.Mode = ModeCommand
+		b.commandKind = '/'
+		b.CommandLine = ""
+		b.searchDir = -1
+		return
 	}
 
 	if b.pendingOp != 0 {
@@ -305,18 +323,6 @@ func (b *Buffer) handleNormal(key string) {
 		b.Mode = ModeCommand
 		b.commandKind = ':'
 		b.CommandLine = ""
-		b.resetPending()
-	case "/":
-		b.Mode = ModeCommand
-		b.commandKind = '/'
-		b.CommandLine = ""
-		b.searchDir = 1
-		b.resetPending()
-	case "?":
-		b.Mode = ModeCommand
-		b.commandKind = '/'
-		b.CommandLine = ""
-		b.searchDir = -1
 		b.resetPending()
 	case "n":
 		b.repeatSearch(1)

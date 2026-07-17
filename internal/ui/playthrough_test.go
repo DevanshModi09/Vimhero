@@ -407,6 +407,28 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"c", "i", "w"}, typeStr("conn"), []string{"esc"},
 			[]string{"G", "o"}, typeStr("done"), []string{"esc"},
 		)},
+
+		{26, 0, concatKeys([]string{"d", "/"}, typeStr("fix"), []string{"enter"})},
+		{26, 1, concatKeys([]string{"d", "?"}, typeStr("TODO"), []string{"enter"})},
+		{26, 2, concatKeys(
+			[]string{"c", "/"}, typeStr("PENDING"), []string{"enter"},
+			typeStr("DONE "), []string{"esc"},
+		)},
+		{26, 3, concatKeys(
+			[]string{"y", "/"}, typeStr("method"), []string{"enter"},
+			[]string{"j", "P"},
+		)},
+		{26, 4, concatKeys(
+			[]string{"d", "/"}, typeStr("server"), []string{"enter"},
+			[]string{"j", "0", "f", "=", "l"},
+			[]string{"c", "/"}, typeStr("code"), []string{"enter"},
+			typeStr("DONE "), []string{"esc"},
+			[]string{"j", "0", "w", "w"},
+			[]string{"y", "/"}, typeStr("backoff"), []string{"enter"},
+			[]string{"j", "P"},
+			[]string{"G", "0", "w", "w", "w"},
+			[]string{"d", "?"}, typeStr("TODO"), []string{"enter"},
+		)},
 	}
 
 	m := NewModel()

@@ -11,18 +11,28 @@ func (b *Buffer) handleCommandMode(key string) {
 	case "esc":
 		b.Mode = ModeNormal
 		b.CommandLine = ""
+		b.pendingSearchOp = 0
 		b.resetPending()
 		return
 	case "enter":
 		line := b.CommandLine
 		kind := b.commandKind
+		op := b.pendingSearchOp
 		b.Mode = ModeNormal
 		b.CommandLine = ""
+		b.pendingSearchOp = 0
 		b.resetPending()
 		if kind == ':' {
 			b.executeExCommand(line)
+			return
+		}
+		from := b.Cursor
+		b.searchPattern = line
+		if op != 0 {
+			if b.repeatSearch(1) {
+				b.applyCharwise(op, 0, from, b.Cursor, false)
+			}
 		} else {
-			b.searchPattern = line
 			b.repeatSearch(1)
 		}
 		return
@@ -203,14 +213,14 @@ func (b *Buffer) searchWord(dir int) {
 	b.repeatSearch(1)
 }
 
-func (b *Buffer) repeatSearch(dir int) {
+func (b *Buffer) repeatSearch(dir int) bool {
 	if b.searchPattern == "" {
-		return
+		return false
 	}
 	re, err := regexp.Compile(b.searchPattern)
 	if err != nil {
 		b.StatusMsg = "bad pattern: " + err.Error()
-		return
+		return false
 	}
 	effDir := dir * b.searchDir
 	if effDir == 0 {
@@ -225,7 +235,7 @@ func (b *Buffer) repeatSearch(dir int) {
 	}
 	if len(matches) == 0 {
 		b.StatusMsg = "pattern not found: " + b.searchPattern
-		return
+		return false
 	}
 
 	cur := b.Cursor
@@ -233,20 +243,21 @@ func (b *Buffer) repeatSearch(dir int) {
 		for _, m := range matches {
 			if m.Row > cur.Row || (m.Row == cur.Row && m.Col > cur.Col) {
 				b.Cursor = m
-				return
+				return true
 			}
 		}
 		b.Cursor = matches[0]
-		return
+		return true
 	}
 	for i := len(matches) - 1; i >= 0; i-- {
 		m := matches[i]
 		if m.Row < cur.Row || (m.Row == cur.Row && m.Col < cur.Col) {
 			b.Cursor = m
-			return
+			return true
 		}
 	}
 	b.Cursor = matches[len(matches)-1]
+	return true
 }
 
 func byteToRuneCol(s string, byteIdx int) int {

@@ -2619,4 +2619,117 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 26,
+		Week:   "Week 4: Find & Search",
+		Title:  "d/, c/, y/ — Operators Meet Search",
+		Summary: "/ and ? aren't just for moving the cursor — any operator can take a " +
+			"search as its motion, exactly like it already takes f, t, or %. d/{pattern} " +
+			"then enter deletes from the cursor up to (not including) the next match, " +
+			"c/{pattern} does the same and drops you into insert mode, and y/{pattern} " +
+			"copies the span into the register without touching the buffer. ? works the " +
+			"same way in reverse, deleting or yanking backward to the previous match " +
+			"instead. Just like d%, the range can cross as many lines as it needs to.",
+		Challenges: []Challenge{
+			{
+				Title: "d/ — Delete Up To The Next Match",
+				Instructions: "d/{pattern} then enter deletes everything between the " +
+					"cursor and the next match, stopping just short of it — the match " +
+					"itself survives. Press d then / then type fix and enter to strip " +
+					"the noisy prefix off this line.",
+				Tip: "Tip: this is exclusive, same rule as dt or dw — whatever you " +
+					"search for is the boundary, and boundaries you find (rather than " +
+					"typing a character for) still follow it.",
+				Start:       []string{"URGENT: fix this bug now"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"fix this bug now"},
+				Par:         6,
+			},
+			{
+				Title: "d? — Delete Backward To A Match",
+				Instructions: "? searches backward, so d?{pattern} deletes backward " +
+					"instead — from the match through everything up to (not including) " +
+					"where your cursor started. Your cursor sits on \"this\". Press d " +
+					"then ? then type TODO and enter to remove the marker and the " +
+					"clutter after it in one shot.",
+				Tip: "Tip: d? is the mirror of d/ — the match itself gets swallowed " +
+					"this time because it's now the far end of the range instead of " +
+					"the boundary you stop before.",
+				Start:       []string{"remove TODO cleanup this stray text here"},
+				CursorStart: Pos{0, 20},
+				Kind:        KindEdit,
+				Target:      []string{"remove this stray text here"},
+				Par:         7,
+			},
+			{
+				Title: "c/ — Change Up To A Match",
+				Instructions: "c/ behaves exactly like c does with any other motion: " +
+					"delete the exclusive range, then drop into insert mode to type " +
+					"the replacement. Press c then / then type PENDING and enter to " +
+					"reach the status flag, then type DONE followed by a space so it " +
+					"still reads cleanly against what comes after.",
+				Tip: "Tip: same exclusive-boundary idea as ct: from day 22 — the text " +
+					"you searched for stays put, only what's in front of it changes.",
+				Start:       []string{"status: PENDING please wait"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"DONE PENDING please wait"},
+				Par:         16,
+			},
+			{
+				Title: "y/ — Yank Up To A Match, Then Paste It Elsewhere",
+				Instructions: "y/ never touches the buffer — it just fills the " +
+					"register with everything up to the match, same as y always has. " +
+					"Your cursor sits right after \"endpoint: \" on line 1. Press y " +
+					"then / then type method and enter to copy the path, then press j " +
+					"and P to drop it into the gap on line 2, right before its own " +
+					"\"method\".",
+				Tip: "Tip: the search that y/ uses to find its boundary doesn't move " +
+					"your cursor any further than the boundary itself — same as every " +
+					"other y motion, it leaves the buffer alone until you paste.",
+				Start: []string{
+					"endpoint: /api/v1/users method=GET",
+					"endpoint: method=POST",
+				},
+				CursorStart: Pos{0, 10},
+				Kind:        KindEdit,
+				Target: []string{
+					"endpoint: /api/v1/users method=GET",
+					"endpoint: /api/v1/users method=POST",
+				},
+				Par: 11,
+			},
+			{
+				Title: "Tidy The Startup Log",
+				Instructions: "Five lines, four search-powered fixes. Line 1: " +
+					"d/server clears the DEBUG prefix. Line 2: f= then l lands you " +
+					"right after the equals sign, then c/code changes PENDING to DONE " +
+					"(type DONE with a trailing space). Line 3 to line 4: w w reaches " +
+					"retries=5, y/backoff copies it, then j and P paste it into line " +
+					"4's gap. Line 5: w w w reaches flag, then d?TODO deletes the " +
+					"marker and the clutter behind it, leaving flag here in place.",
+				Tip: "Tip: nothing here is a new key — it's / and ? doing the same job " +
+					"f and t did back on day 22, just aimed at the whole buffer instead " +
+					"of a single line.",
+				Start: []string{
+					"DEBUG: server booting up",
+					"STATUS=PENDING code=200",
+					"template: retries=5 backoff=200",
+					"override: backoff=200",
+					"cleanup TODO leftover flag here",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"server booting up",
+					"STATUS=DONE code=200",
+					"template: retries=5 backoff=200",
+					"override: retries=5 backoff=200",
+					"cleanup flag here",
+				},
+				Par: 55,
+			},
+		},
+	},
 }

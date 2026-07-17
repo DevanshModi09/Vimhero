@@ -213,3 +213,71 @@ func TestDollarOperator(t *testing.T) {
 		t.Fatalf("expected 'hello ', got %q", b.Text())
 	}
 }
+
+func TestDeleteSearchForward(t *testing.T) {
+	b := New([]string{"URGENT: fix this bug now"}, Pos{0, 0})
+	feed(b, "d", "/")
+	for _, k := range "fix" {
+		b.Input(string(k))
+	}
+	feed(b, "enter")
+	if b.Text() != "fix this bug now" {
+		t.Fatalf("expected 'fix this bug now', got %q", b.Text())
+	}
+}
+
+func TestChangeSearchForward(t *testing.T) {
+	b := New([]string{"status: PENDING please wait"}, Pos{0, 0})
+	feed(b, "c", "/")
+	for _, k := range "PENDING" {
+		b.Input(string(k))
+	}
+	feed(b, "enter")
+	for _, k := range "DONE " {
+		b.Input(string(k))
+	}
+	feed(b, "esc")
+	if b.Text() != "DONE PENDING please wait" {
+		t.Fatalf("expected 'DONE PENDING please wait', got %q", b.Text())
+	}
+}
+
+func TestYankSearchBackward(t *testing.T) {
+	b := New([]string{"alpha beta gamma delta"}, Pos{0, 18})
+	feed(b, "y", "?")
+	for _, k := range "beta" {
+		b.Input(string(k))
+	}
+	feed(b, "enter")
+	if b.Cursor != (Pos{0, 6}) {
+		t.Fatalf("expected cursor {0 6} after y?, got %v", b.Cursor)
+	}
+	feed(b, "p")
+	if b.Text() != "alpha bbeta gamma deta gamma delta" {
+		t.Fatalf("unexpected paste result: %q", b.Text())
+	}
+}
+
+func TestDeleteSearchCrossesLines(t *testing.T) {
+	b := New([]string{"function setup() {", "    initialize()", "    configure()", "}"}, Pos{0, 0})
+	feed(b, "d", "/")
+	for _, k := range "configure" {
+		b.Input(string(k))
+	}
+	feed(b, "enter")
+	if len(b.Lines) != 2 || b.Lines[0] != "configure()" || b.Lines[1] != "}" {
+		t.Fatalf("unexpected lines after cross-line d/: %q", b.Lines)
+	}
+}
+
+func TestDeleteSearchNoMatchLeavesBufferUntouched(t *testing.T) {
+	b := New([]string{"hello world"}, Pos{0, 0})
+	feed(b, "d", "/")
+	for _, k := range "zzz" {
+		b.Input(string(k))
+	}
+	feed(b, "enter")
+	if b.Text() != "hello world" {
+		t.Fatalf("expected unchanged text on failed search, got %q", b.Text())
+	}
+}
