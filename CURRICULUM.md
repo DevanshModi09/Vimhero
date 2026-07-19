@@ -64,7 +64,7 @@ motion from weeks 1-2, then the full `i`/`a` text-object family
 full-syllabus revision boss. Day 17 has just 1 of its planned challenges
 — the rest of that lesson is still open.
 
-## Week 4: Find & Search — Days 22-28 🚧
+## Week 4: Find & Search — Days 22-28 ✅
 
 | Day | Title | Challenges |
 | --- | ----- | ---------- |
@@ -73,8 +73,8 @@ full-syllabus revision boss. Day 17 has just 1 of its planned challenges
 | 24 | % — Jump To The Matching Bracket | 5 |
 | 25 | * and # — Search The Word Under The Cursor | 5 |
 | 26 | d/, c/, y/ — Operators Meet Search | 5 |
-| 27 | Search Patterns — \d, ^, and Character Classes | 5 ✅ |
-| 28 | *(week 4 boss — not yet written)* | ⏳ |
+| 27 | Search Patterns — \d, ^, and Character Classes | 5 |
+| 28 | Boss Challenge — Everything From Days 22-27 | 5 |
 
 Same-line character jumps (`f`/`F`/`t`/`T` plus `;`/`,`), whole-buffer
 search (`/`, `?`, `n`, `N`), bracket matching (`%`), search-the-word-
@@ -82,9 +82,12 @@ under-cursor (`*`/`#`), then search used as an operator's motion
 (`d/`, `c/`, `y/`). Day 27 covers `\d`, `^`, and `[set]` as three
 goal-reach challenges, then ties them back into day 26's `d/`/`c/`
 operators — first with `d/\d` alone, then a four-line finale combining
-all three patterns with `d/` and `c/`. Day 28 is expected to be this
-week's boss day, following the pattern set by days 8, 11, 14, and 21,
-but hasn't been authored yet.
+all three patterns with `d/` and `c/`. Day 28 closes out the week as a
+checkpoint boss, following the pattern set by days 8, 11, 14, and 21 —
+no new keys, just `f`/`;`, `/`/`n`, `%`, `*`, and pattern-powered `d/`/`c/`
+recombined, including `d%` (an operator+bracket-motion pairing not
+spelled out on day 24 itself, in keeping with how day 14 first paired
+`d`/`c` with day 13's `0`/`^`/`$` without it being taught explicitly).
 
 ## Week 5: Visual Mode, Marks, Macros, Substitution & Global — Days 29-34 ⏳
 

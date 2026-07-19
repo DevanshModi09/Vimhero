@@ -2840,4 +2840,115 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 28,
+		Week:   "Week 4: Checkpoint",
+		Title:  "Boss Challenge — Everything From Days 22-27",
+		Summary: "No new keys today. Five tasks, each solvable only by combining the " +
+			"find-and-search tools from the last six days: same-line character jumps " +
+			"(f, t, and their repeats), whole-buffer search (/, n), bracket matching " +
+			"(%), search-the-word-under-cursor (*), and the search patterns (\\d, ^, " +
+			"[set]) that plug into d/, c/, and y/ — no single correct sequence spelled " +
+			"out for you.",
+		Challenges: []Challenge{
+			{
+				Title: "Chained Jumps",
+				Instructions: "This variable name picked up two stray underscores. Move " +
+					"to it, then use f_ to land on the first one and x to delete it — " +
+					"then ; to repeat the jump onto the second underscore and x again.",
+				Tip: "Tip: ; repeats whatever f, t, F, or T you last used — you don't " +
+					"have to type f_ twice just because there are two of them.",
+				Start:       []string{"call get_user_name to fetch profile"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"call getusername to fetch profile"},
+				Par:         6,
+			},
+			{
+				Title: "Search, Repeat, Fix",
+				Instructions: "Three TODOs, but only the last one is actually done. " +
+					"Search for TODO, use n to skip past the one that isn't ready yet, " +
+					"then cw the one that is into DONE.",
+				Tip: "Tip: the first enter after / already jumps to the next match past " +
+					"the cursor — n is for when that first landing spot isn't the one " +
+					"you actually wanted.",
+				Start: []string{
+					"TODO fix urgent bug",
+					"TODO minor cleanup",
+					"TODO ship the release",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"TODO fix urgent bug",
+					"TODO minor cleanup",
+					"DONE ship the release",
+				},
+				Par: 14,
+			},
+			{
+				Title: "Bracket Hop",
+				Instructions: "This condition needs one more clause tacked on before it " +
+					"closes. Jump to the opening paren with f(, then % to its match, " +
+					"then insert && y right before it closes.",
+				Tip: "Tip: % doesn't care how far away the match is or what's nested " +
+					"inside — it jumps straight to the paren that actually closes this " +
+					"one.",
+				Start:       []string{"if (x == 1) { ok(); }"},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target:      []string{"if (x == 1 && y) { ok(); }"},
+				Par:         10,
+			},
+			{
+				Title: "Word Under The Cursor",
+				Instructions: "Two lines share the word apple, and only the second one " +
+					"should. Press * on the first to jump straight to the second, then " +
+					"ciw to swap it for cherry.",
+				Tip: "Tip: * grabs whatever word the cursor is sitting on and jumps to " +
+					"its next exact match — no typing the word yourself like / needs.",
+				Start: []string{
+					"apple pie",
+					"banana split",
+					"apple tart",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"apple pie",
+					"banana split",
+					"cherry tart",
+				},
+				Par: 11,
+			},
+			{
+				Title: "Boss Challenge",
+				Instructions: "Four unrelated problems, four different tools. Line 1: " +
+					"d/\\d strips the ticket prefix off, leaving just the number. Line " +
+					"3 is the real error line — /^ERROR jumps past the decoy on line 2 " +
+					"straight to it, then c/: types FIXED in place of ERROR (type FIXED " +
+					"then esc). Line 4: j then 0 to reach it, then f( to reach the " +
+					"paren and d% to delete the whole (status) parenthetical in one " +
+					"shot.",
+				Tip: "Tip: d% deletes everything from the bracket under the cursor to " +
+					"its match, inclusive — same idea as d$ deleting to end-of-line, " +
+					"just bounded by a bracket pair instead.",
+				Start: []string{
+					"REQ-5521 payment received",
+					"status: ERROR minor glitch",
+					"ERROR: disk usage critical",
+					"check(status) failed",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"5521 payment received",
+					"status: ERROR minor glitch",
+					"FIXED: disk usage critical",
+					"check failed",
+				},
+				Par: 29,
+			},
+		},
+	},
 }
