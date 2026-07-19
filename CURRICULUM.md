@@ -89,7 +89,7 @@ recombined, including `d%` (an operator+bracket-motion pairing not
 spelled out on day 24 itself, in keeping with how day 14 first paired
 `d`/`c` with day 13's `0`/`^`/`$` without it being taught explicitly).
 
-## Week 5: Visual Mode, Marks, Macros, Substitution & Global — Days 29-34 ⏳
+## Week 5: Visual Mode, Marks, Macros, Substitution & Global — Days 29-34 🚧
 
 All remaining new teaching content is compressed into these 6 days, so
 that every day from 35 onward is pure recap — no new keys introduced
@@ -97,12 +97,17 @@ past day 34.
 
 | Day | Title | Status |
 | --- | ----- | ------ |
-| 29 | `v` and `V` — Visual & Visual-Line Mode | ⏳ |
+| 29 | `v` and `V` — Visual & Visual-Line Mode | ✅ |
 | 30 | Extending A Visual Selection (motions + `o` to swap ends) | ⏳ |
 | 31 | Text Objects & Case Toggle In Visual Mode (`vi(`, `vi"`, `viw`, `~`) | ⏳ |
 | 32 | `m` and `'` — Marks | ⏳ |
 | 33 | `q`, `@`, `@@` — Macros | ⏳ |
 | 34 | `:s` and `:g` — Substitution & The Global Command | ⏳ |
+
+Day 29 introduces `v`/`V` on their own — selection grown with plain
+motions (`l`, `e`, `$`, `j`), then acted on with `d`, `y`, `c`, or `~` —
+deliberately holding back `o` (day 30) and visual text objects (day 31)
+so each stays a clean, single new idea.
 
 The engine (`pkg/editor/visual.go`, `normal.go`, `command.go`) already
 implements all of this — `v`/`V`/`o`, motions and text objects inside
