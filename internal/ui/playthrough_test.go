@@ -464,6 +464,22 @@ func TestCurriculumSolvable(t *testing.T) {
 			[]string{"v", "l", "l", "l", "o", "h", "h", "c"}, typeStr("done"), []string{"esc"},
 		)},
 		{30, 4, []string{"v", "l", "l", "l", "l", "o", "h", "o", "l", "y", "j", "$", "p"}},
+
+		{31, 0, []string{"v", "i", "w", "d"}},
+		{31, 1, []string{"v", "i", "w", "l", "d"}},
+		{31, 2, []string{"v", "i", "(", "~"}},
+		{31, 3, concatKeys(
+			[]string{"v", "i", "\"", "c"}, typeStr("config.yaml"), []string{"esc"},
+		)},
+		{31, 4, concatKeys(
+			[]string{"f", "o", "v", "i", "w", "d"},
+			[]string{"j", "0"},
+			[]string{"f", "(", "v", "i", "(", "~"},
+			[]string{"j", "0"},
+			[]string{"f", "\"", "v", "i", "\"", "c"}, typeStr("new.txt"), []string{"esc"},
+			[]string{"j", "0"},
+			[]string{"f", "(", "v", "i", "(", "o", "h", "h", "d"},
+		)},
 	}
 
 	m := NewModel()

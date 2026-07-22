@@ -3154,4 +3154,109 @@ var days = []Day{
 			},
 		},
 	},
+	{
+		Number: 31,
+		Week:   "Week 5: Visual Mode, Marks, Macros & Global",
+		Title:  "Text Objects & Case Toggle In Visual Mode (vi(, vi\", viw, ~)",
+		Summary: "iw, i(, and i\" have only ever committed instantly, glued to c or d — " +
+			"ciw, di(, ci\" and the rest. Put v in front of any of them instead — viw, " +
+			"vi(, vi\" — and Vim builds the exact same range but stops in visual mode " +
+			"first, letting you see the highlight, grow it further with any ordinary " +
+			"motion, or even swap ends with o from yesterday, before finally committing " +
+			"with d, c, y, or ~. The text object just aims the selection; everything " +
+			"you already know about visual mode still applies once it lands.",
+		Challenges: []Challenge{
+			{
+				Title: "viw — Select A Word Visually, Then Delete It",
+				Instructions: "Your cursor sits inside oldword. viw selects the whole " +
+					"word the same way ciw and diw always have — the difference is " +
+					"visual mode shows you the selection before anything happens. " +
+					"Press viw, then d to delete it.",
+				Tip: "Tip: viw is just v followed by the same iw text object behind " +
+					"ciw and diw — v shows you the selection first instead of " +
+					"committing to an operator immediately.",
+				NewKeys:     []string{"viw"},
+				Start:       []string{"swap oldword out"},
+				CursorStart: Pos{0, 8},
+				Kind:        KindEdit,
+				Target:      []string{"swap  out"},
+				Par:         4,
+			},
+			{
+				Title: "viw Then Extend — Grow The Selection Before Committing",
+				Instructions: "viw selects just oldval here, but underneath it's " +
+					"still an ordinary visual selection — press l once afterward to " +
+					"pull the trailing comma in too, same as growing any v selection " +
+					"with a motion. Then d deletes the word and the comma together.",
+				Tip: "Tip: unlike ciw, which commits the instant you type it, v " +
+					"followed by iw leaves you in visual mode — any motion after it " +
+					"keeps growing the selection until you choose an operator.",
+				Start:       []string{"set(oldval, other)"},
+				CursorStart: Pos{0, 6},
+				Kind:        KindEdit,
+				Target:      []string{"set( other)"},
+				Par:         5,
+			},
+			{
+				Title: "vi( — Flip The Case Of A Call's Arguments",
+				Instructions: "vi( selects everything between a pair of parentheses, " +
+					"the same i( text object behind ci( — but visual mode lets you " +
+					"see the range first. Press vi(, then ~ to flip the case of " +
+					"everything selected in one shot.",
+				Tip: "Tip: ~ works over any visual selection no matter how it was " +
+					"built — a plain v drag, a V line selection, or here, a text " +
+					"object like vi(.",
+				NewKeys:     []string{"vi("},
+				Start:       []string{"print(hello world)"},
+				CursorStart: Pos{0, 9},
+				Kind:        KindEdit,
+				Target:      []string{"print(HELLO WORLD)"},
+				Par:         4,
+			},
+			{
+				Title: "vi\" — Change A Quoted Value",
+				Instructions: "vi\" selects the text between a pair of quotes, the " +
+					"same i\" text object behind ci\" — press vi\" here, then c to " +
+					"clear the selection and drop into Insert mode. Type " +
+					"config.yaml then esc.",
+				Tip: "Tip: c after any visual selection behaves the same as it did " +
+					"on Day 29 — delete what's selected, then drop straight into " +
+					"Insert mode at that spot.",
+				NewKeys:     []string{"vi\""},
+				Start:       []string{"path = \"old/file.txt\""},
+				CursorStart: Pos{0, 10},
+				Kind:        KindEdit,
+				Target:      []string{"path = \"config.yaml\""},
+				Par:         16,
+			},
+			{
+				Title: "Capstone",
+				Instructions: "Four lines, every text object from today paired with " +
+					"a new operator: delete a visually-selected word with viwd, flip " +
+					"the case of a parenthesized pair with vi(~, replace a quoted " +
+					"value with vi\"c, and on the last line reuse o from Day 30 to " +
+					"widen a parenthesized selection before deleting it. Use f " +
+					"followed by the target character to land on it first, since " +
+					"your cursor starts each line at column 0.",
+				Tip: "Tip: landing on the delimiter itself works exactly like " +
+					"landing inside it, same as it did for ci( and ci\" — vi( and " +
+					"vi\" don't care which side of the pair you start from.",
+				Start: []string{
+					"swap oldword out",
+					"print(hello)",
+					"path = \"old.txt\"",
+					"xx(NAME)yy",
+				},
+				CursorStart: Pos{0, 0},
+				Kind:        KindEdit,
+				Target: []string{
+					"swap  out",
+					"print(HELLO)",
+					"path = \"new.txt\"",
+					"x)yy",
+				},
+				Par: 41,
+			},
+		},
+	},
 }
